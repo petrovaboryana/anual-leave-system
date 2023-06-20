@@ -7,7 +7,7 @@ public class Main {
         try{
             BufferedWriter writer = new BufferedWriter(new FileWriter("vacationsDigitalRazgrad2023.txt", true));
             System.out.println("Моля въведи следната информация.");
-            System.out.println("Две имена:");
+            System.out.println("Въведи Две имена:");
             String name = sc.nextLine();
             System.out.println("Имейл:");
             String email = sc.nextLine();
