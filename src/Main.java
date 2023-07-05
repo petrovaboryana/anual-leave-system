@@ -1,6 +1,8 @@
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Formatter;
 import java.util.Scanner;
 
 public class Main {
@@ -15,13 +17,13 @@ public class Main {
             System.out.println("ЕГН:");
             String id = sc.nextLine();
             System.out.println("Дата за начало на отпуската(ден.месец.година):");
-            String dataLeaveBegining = sc.nextLine();
+            String dataLeaveBeginning = sc.nextLine();
             System.out.println("Дата за край на отпуската(ден.месец.година):");
             String dataLeaveEnding = sc.nextLine();
             System.out.print("Тип на отпуската (платена/неплатена): ");
             String vacationType = sc.nextLine();
 
-            writer.write(name + "," + email + "," + id + "," + dataLeaveBegining + "," + dataLeaveEnding + "," + vacationType + "\n");
+            writer.write(name + "," + email + "," + id + "," + dataLeaveBeginning + "," + dataLeaveEnding + "," + vacationType + "\n");
             writer.close();
 
             System.out.println("Вие успешно заявихте своята отпуска.");
@@ -35,11 +37,13 @@ public class Main {
             File file = new File("vacationsDigitalRazgrad2023.csv");
             Scanner fileReader = new Scanner(file, "utf-8");
             System.out.println("Всички заявени отпуски във фирмата са:");
+            Formatter formatter = new Formatter();
+            System.out.println(formatter.format("%-15s %-15s %-15s %-15s %-15s %-15s\n", "Две имена", "Имейл", "ЕГН", "Начална дата", "Крайна дата", "Тип-платена/неплатена"));
 
             while (fileReader.hasNextLine()) {
                 String line = fileReader.nextLine();
                 String[] employeeInfo = line.split(",");
-                printVacationRow(employeeInfo);
+                System.out.printf("%-15s %-15s %-15s %-15s %-15s %-15s\n", employeeInfo[0], employeeInfo[1], employeeInfo[2], employeeInfo[3], employeeInfo[4], employeeInfo[5]);
             }
             fileReader.close();
         } catch (Exception e) {
@@ -47,9 +51,29 @@ public class Main {
         }
     }
 
-    private static void printVacationRow(String[] employeeInfo) {
-//        System.out.println("%-15s %-15s %-15s %-15s %-15s %-15s\n", "Две имена*", "имейл*", "ЕГН*", "Начална дата на отпуската*","Крайна дата на отпуската*", "Тип-платена/неплатена*");// да го поправя
-        System.out.printf("%-15s %-15s %-15s %-15s %-15s %-15s\n", employeeInfo[0], employeeInfo[1], employeeInfo[2], employeeInfo[3], employeeInfo[4], employeeInfo[5]);
+    public static void viewVacationForEmployee(Scanner sc) {
+        try {
+            System.out.print("Въведи ЕГН на служителя: ");
+            String egn = sc.nextLine();
+            File file = new File("vacationsDigitalRazgrad2023.csv");
+            Scanner fileReader = new Scanner(file, "utf-8");
+
+            System.out.println("Отпуски за служител с ЕГН " + egn + ":");
+            Formatter formatter = new Formatter();
+            System.out.println(formatter.format("%-15s %-15s %-15s %-15s %-15s %-15s\n", "Две имена", "Имейл", "ЕГН", "Начална дата", "Крайна дата", "Тип-платена/неплатена"));
+
+            while (fileReader.hasNextLine()) {
+                String vacation = fileReader.nextLine();
+                String[] vacationDetails = vacation.split(",");
+
+                if (vacationDetails[2].equals(egn)) {
+                    System.out.printf("%-15s %-15s %-15s %-15s %-15s %-15s\n", vacationDetails[0], vacationDetails[1], vacationDetails[2], vacationDetails[3], vacationDetails[4], vacationDetails[5]);
+                }
+            }
+            fileReader.close();
+        } catch (IOException e) {
+            System.out.println("Невалидни входни данни!");
+        }
     }
 
     public static void main(String[] args) {
@@ -71,11 +95,11 @@ public class Main {
             case 2:
                 viewAllVacations();
                 break;
-//            case 3:
-//                viewVacationForEmployee(scanner);
-//                break;
+            case 3:
+                viewVacationForEmployee(input);
+                break;
 //            case 4:
-//                changeVacationStatus(scanner);
+//                changeVacationStatus(input);
 //                break;
             case 5: {
                 System.out.println("Довиждане!");
