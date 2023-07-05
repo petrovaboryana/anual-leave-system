@@ -1,13 +1,14 @@
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.util.Scanner;
 
 public class Main {
-    public static void generateVacation(Scanner sc){
-        try{
-            BufferedWriter writer = new BufferedWriter(new FileWriter("vacationsDigitalRazgrad2023.txt", true));
+    public static void generateVacation(Scanner sc) {
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter("vacationsDigitalRazgrad2023.csv", true));
             System.out.println("Моля въведи следната информация.");
-            System.out.println("Въведи Две имена:");
+            System.out.println("Две имена:");
             String name = sc.nextLine();
             System.out.println("Имейл:");
             String email = sc.nextLine();
@@ -24,9 +25,31 @@ public class Main {
             writer.close();
 
             System.out.println("Вие успешно заявихте своята отпуска.");
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println("Грешка при подаването на заявление за отпуска..");
         }
+    }
+
+    public static void viewAllVacations() {
+        try {
+            File file = new File("vacationsDigitalRazgrad2023.csv");
+            Scanner fileReader = new Scanner(file, "utf-8");
+            System.out.println("Всички заявени отпуски във фирмата са:");
+
+            while (fileReader.hasNextLine()) {
+                String line = fileReader.nextLine();
+                String[] employeeInfo = line.split(",");
+                printVacationRow(employeeInfo);
+            }
+            fileReader.close();
+        } catch (Exception e) {
+            System.out.println("Грешка!");
+        }
+    }
+
+    private static void printVacationRow(String[] employeeInfo) {
+//        System.out.println("%-15s %-15s %-15s %-15s %-15s %-15s\n", "Две имена*", "имейл*", "ЕГН*", "Начална дата на отпуската*","Крайна дата на отпуската*", "Тип-платена/неплатена*");// да го поправя
+        System.out.printf("%-15s %-15s %-15s %-15s %-15s %-15s\n", employeeInfo[0], employeeInfo[1], employeeInfo[2], employeeInfo[3], employeeInfo[4], employeeInfo[5]);
     }
 
     public static void main(String[] args) {
@@ -44,21 +67,22 @@ public class Main {
             case 1:
                 generateVacation(input);
                 break;
-//            case 2:
-//                viewAllVacations();
-//                break;
+
+            case 2:
+                viewAllVacations();
+                break;
 //            case 3:
 //                viewVacationForEmployee(scanner);
 //                break;
 //            case 4:
 //                changeVacationStatus(scanner);
 //                break;
-            case 5:
+            case 5: {
                 System.out.println("Довиждане!");
                 System.exit(0);
+            }
             default:
                 System.out.println("Невалиден избор. Опитайте отново.");
-                break;
         }
     }
 }
