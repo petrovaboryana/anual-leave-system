@@ -22,11 +22,13 @@ public class Main {
             String dataLeaveEnding = sc.nextLine();
             System.out.print("Тип на отпуската (платена/неплатена): ");
             String vacationType = sc.nextLine();
+            System.out.println("Статус на отпуската:");
+            String vacationStatus = sc.nextLine();
 
-            writer.write(name + "," + email + "," + id + "," + dataLeaveBeginning + "," + dataLeaveEnding + "," + vacationType + "\n");
+            writer.write(name + "," + email + "," + id + "," + dataLeaveBeginning + "," + dataLeaveEnding + "," + vacationType + "," + vacationStatus + "\n");
             writer.close();
 
-            System.out.println("Вие успешно заявихте своята отпуска.");
+            System.out.println("Вие успешно заявихте отпуска за " + name);
         } catch (Exception e) {
             System.out.println("Грешка при подаването на заявление за отпуска..");
         }
@@ -38,12 +40,12 @@ public class Main {
             Scanner fileReader = new Scanner(file, "utf-8");
             System.out.println("Всички заявени отпуски във фирмата са:");
             Formatter formatter = new Formatter();
-            System.out.println(formatter.format("%-15s %-15s %-15s %-15s %-15s %-15s\n", "Две имена", "Имейл", "ЕГН", "Начална дата", "Крайна дата", "Тип-платена/неплатена"));
+            System.out.println(formatter.format("%-15s %-15s %-15s %-15s %-15s %-15s %-15s\n", "Две имена", "Имейл", "ЕГН", "Начална дата", "Крайна дата", "Тип-платена/неплатена", "Статус"));
 
             while (fileReader.hasNextLine()) {
                 String line = fileReader.nextLine();
                 String[] employeeInfo = line.split(",");
-                System.out.printf("%-15s %-15s %-15s %-15s %-15s %-15s\n", employeeInfo[0], employeeInfo[1], employeeInfo[2], employeeInfo[3], employeeInfo[4], employeeInfo[5]);
+                System.out.printf("%-15s %-15s %-15s %-15s %-15s %-15s\n", employeeInfo[0], employeeInfo[1], employeeInfo[2], employeeInfo[3], employeeInfo[4], employeeInfo[5], employeeInfo[6]);
             }
             fileReader.close();
         } catch (Exception e) {
@@ -53,21 +55,21 @@ public class Main {
 
     public static void viewVacationForEmployee(Scanner sc) {
         try {
-            System.out.print("Въведи ЕГН на служителя: ");
-            String egn = sc.nextLine();
+            System.out.print("Въведи име на служителя: ");
+            String employeeName = sc.nextLine();
             File file = new File("vacationsDigitalRazgrad2023.csv");
             Scanner fileReader = new Scanner(file, "utf-8");
 
-            System.out.println("Отпуски за служител с ЕГН " + egn + ":");
+            System.out.println("Отпуски за служител с име " + employeeName + ":");
             Formatter formatter = new Formatter();
-            System.out.println(formatter.format("%-15s %-15s %-15s %-15s %-15s %-15s\n", "Две имена", "Имейл", "ЕГН", "Начална дата", "Крайна дата", "Тип-платена/неплатена"));
+            System.out.println(formatter.format("%-15s %-15s %-15s %-15s %-15s %-15s %-15s\n", "Две имена", "Имейл", "ЕГН", "Начална дата", "Крайна дата", "Тип-платена/неплатена", "Статус"));
 
             while (fileReader.hasNextLine()) {
                 String vacation = fileReader.nextLine();
                 String[] vacationDetails = vacation.split(",");
 
-                if (vacationDetails[2].equals(egn)) {
-                    System.out.printf("%-15s %-15s %-15s %-15s %-15s %-15s\n", vacationDetails[0], vacationDetails[1], vacationDetails[2], vacationDetails[3], vacationDetails[4], vacationDetails[5]);
+                if (vacationDetails[0].equalsIgnoreCase(employeeName)) {
+                    System.out.printf("%-15s %-15s %-15s %-15s %-15s %-15s\n", vacationDetails[0], vacationDetails[1], vacationDetails[2], vacationDetails[3], vacationDetails[4], vacationDetails[5], vacationDetails[6]);
                 }
             }
             fileReader.close();
@@ -91,7 +93,6 @@ public class Main {
             case 1:
                 generateVacation(input);
                 break;
-
             case 2:
                 viewAllVacations();
                 break;
