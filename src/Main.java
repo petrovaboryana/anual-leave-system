@@ -20,9 +20,9 @@ public class Main {
             String dataLeaveBeginning = sc.nextLine();
             System.out.println("Дата за край на отпуската(ден.месец.година):");
             String dataLeaveEnding = sc.nextLine();
-            System.out.print("Тип на отпуската (платена/неплатена): ");
+            System.out.println("Тип на отпуската (платена/неплатена): ");
             String vacationType = sc.nextLine();
-            System.out.println("Статус на отпуската:");
+            System.out.println("Статус на отпуската(удобрена/отказана/изчаква):");
             String vacationStatus = sc.nextLine();
 
             writer.write(name + "," + email + "," + id + "," + dataLeaveBeginning + "," + dataLeaveEnding + "," + vacationType + "," + vacationStatus + "\n");
@@ -45,7 +45,7 @@ public class Main {
             while (fileReader.hasNextLine()) {
                 String line = fileReader.nextLine();
                 String[] employeeInfo = line.split(",");
-                System.out.printf("%-15s %-15s %-15s %-15s %-15s %-15s\n", employeeInfo[0], employeeInfo[1], employeeInfo[2], employeeInfo[3], employeeInfo[4], employeeInfo[5], employeeInfo[6]);
+                System.out.printf("%-15s %-15s %-15s %-15s %-15s %-15s %-15s\n", employeeInfo[0], employeeInfo[1], employeeInfo[2], employeeInfo[3], employeeInfo[4], employeeInfo[5], employeeInfo[6]);
             }
             fileReader.close();
         } catch (Exception e) {
@@ -74,9 +74,65 @@ public class Main {
             }
             fileReader.close();
         } catch (IOException e) {
-            System.out.println("Невалидни входни данни!");
+            System.out.println("Невалидни входни данни! Името е грешно или служителя няма заявена отпуска.");
         }
     }
+
+    public static void viewVacationStatus() {
+        try {
+            File file = new File("vacationsDigitalRazgrad2023.csv");
+            Scanner fileReader = new Scanner(file, "utf-8");
+            System.out.println("Всички заявени отпуски във фирмата са:");
+            Formatter formatter = new Formatter();
+            System.out.println(formatter.format("%-15s %-15s %-15s %-15s %-15s %-15s %-15s %-15s\n", "Две имена", "Имейл", "ЕГН", "Начална дата", "Крайна дата", "Тип-платена/неплатена", "Статус", "Номер на заявката"));
+
+            while (fileReader.hasNextLine()) {
+                String line = fileReader.nextLine();
+                String[] employeeInfo = line.split(",");
+                System.out.printf("%-15s %-15s %-15s %-15s %-15s %-15s %-15s\n", employeeInfo[0], employeeInfo[1], employeeInfo[2], employeeInfo[3], employeeInfo[4], employeeInfo[5], employeeInfo[6], employeeInfo[7]);
+            }
+            fileReader.close();
+        } catch (Exception e) {
+            System.out.println("Грешка!");
+        }
+    }
+    public static void changeVacationStatus(Scanner sc){
+        viewVacationStatus();
+        try {
+            System.out.print("Въведи номер на заявката: ");
+            String vacationNumber = sc.nextLine();
+
+            System.out.print("Въведи нов статус на отпуската (одобрена/отказана/изчаква): ");
+            String newStatus = sc.nextLine();
+
+            File file = new File("vacationsDigitalRazgrad2023.csv");
+            Scanner fileReader = new Scanner(file, "utf-8");
+
+            StringBuilder fileContent = new StringBuilder();
+            while (fileReader.hasNextLine()) {
+                String vacation = fileReader.nextLine();
+                String[] vacationDetails = vacation.split(",");
+
+                if (vacationDetails[7].equals(vacationNumber)) {
+                    vacationDetails[6] = newStatus;
+                    vacation = String.join(",", vacationDetails);
+                }
+
+                fileContent.append(vacation).append("\n");
+            }
+
+            BufferedWriter writer = new BufferedWriter(new FileWriter("vacations.txt"));
+            writer.write(fileContent.toString());
+            writer.close();
+
+            System.out.println("Статусът на отпуската е успешно променен.");
+
+            fileReader.close();
+        } catch (IOException e) {
+            System.out.println("Грешка при промяната на статуса на отпуската.");
+        }
+    }
+
 
     public static void main(String[] args) {
         System.out.println("Добре дошли в системата за отпуски на фирма DigitalRazgrad 2023. Моля изберете опция от менюто, като въведете число от 1 до 5:");
@@ -99,9 +155,9 @@ public class Main {
             case 3:
                 viewVacationForEmployee(input);
                 break;
-//            case 4:
-//                changeVacationStatus(input);
-//                break;
+            case 4:
+                changeVacationStatus(input);
+                break;
             case 5: {
                 System.out.println("Довиждане!");
                 System.exit(0);
