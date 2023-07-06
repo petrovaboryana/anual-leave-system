@@ -62,7 +62,7 @@ public class Main {
 
             System.out.println("Отпуски за служител с име " + employeeName + ":");
             Formatter formatter = new Formatter();
-            System.out.println(formatter.format("%-15s %-15s %-15s %-15s %-15s %-15s %-15s\n", "Две имена", "Имейл", "ЕГН", "Начална дата", "Крайна дата", "Тип-платена/неплатена", "Статус"));
+            System.out.println(formatter.format("%-15s %-15s %-15s %-15s %-15s %-15s %-15s\n", "Две имена" , "Имейл", "ЕГН", "Начална дата", "Крайна дата", "Тип-платена/неплатена", "Статус"));
 
             while (fileReader.hasNextLine()) {
                 String vacation = fileReader.nextLine();
