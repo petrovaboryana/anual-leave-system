@@ -7,7 +7,7 @@ import java.util.Scanner;
 import java.util.Random;
 
 public class Main {
-    public static String numberVacationgenerator() {
+    public static String numberVacationGenerator() {
         Random random = new Random();
         String number = "";
 
@@ -20,8 +20,7 @@ public class Main {
 
     public static void generateVacation(Scanner sc) {
         try {
-            String requestNumber = numberVacationgenerator();
-
+            String requestNumber = numberVacationGenerator();
             BufferedWriter writer = new BufferedWriter(new FileWriter("vacationsDigitalRazgrad2023.csv", true));
             System.out.println("Моля въведи следната информация.");
             System.out.println("Две имена:");
@@ -31,13 +30,14 @@ public class Main {
             System.out.println("ЕГН:");
             String id = sc.nextLine();
             System.out.println("Дата за начало на отпуската(ден.месец.година):");
-            String dataLeaveBeginning = sc.nextLine();
+            String dataVacationBeginning = sc.nextLine();
             System.out.println("Дата за край на отпуската(ден.месец.година):");
-            String dataLeaveEnding = sc.nextLine();
+            String dataVacationEnding = sc.nextLine();
             System.out.println("Тип на отпуската (платена/неплатена): ");
             String vacationType = sc.nextLine();
+            String status = "изчаква";
 
-            writer.write(requestNumber + " " + name + "," + email + "," + id + "," + dataLeaveBeginning + "," + dataLeaveEnding + "," + vacationType + "\n");
+            writer.write(requestNumber + "," + name + "," + email + "," + id + "," + dataVacationBeginning + "," + dataVacationEnding + "," + vacationType + "," + status + "\n");
             writer.close();
 
             System.out.println("Вие успешно заявихте отпуска за " + name);
@@ -52,7 +52,7 @@ public class Main {
             Scanner fileReader = new Scanner(file, "utf-8");
             System.out.println("Всички заявени отпуски във фирмата са:");
             Formatter formatter = new Formatter();
-            System.out.println(formatter.format("%-15s %-15s %-15s %-15s %-15s %-15s %-15s %-15s\n", "Номер на заявката", "Две имена", "Имейл", "ЕГН", "Начална дата", "Крайна дата", "Тип-платена/неплатена", "Статус"));
+            System.out.println(formatter.format("%-15s %-15s %-15s %-10s %-15s %-15s %-15s %-25s\n", "Номер на заявката", "Две имена", "Имейл", "ЕГН", "Начална дата", "Крайна дата", "Тип-платена/неплатена", " Статус"));
             String line = " ";
             while (fileReader.hasNextLine()) {
                 line = fileReader.nextLine();
@@ -61,7 +61,8 @@ public class Main {
             }
             fileReader.close();
         } catch (Exception e) {
-            System.out.println("Грешка!");
+            System.out.println("Грешка: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -74,14 +75,14 @@ public class Main {
 
             System.out.println("Отпуски за служител с име " + employeeName + ":");
             Formatter formatter = new Formatter();
-            System.out.println(formatter.format("%-20s %-15s %-15s %-15s %-15s %-15s %-15s %-20s\n", "Номер на заявката", "Две имена", "Имейл", "ЕГН", "Начална дата", "Крайна дата", "Тип-платена/неплатена", "Статус"));
+            System.out.println(formatter.format("%-15s %-15s %-15s %-10s %-15s %-15s %-15s %-25s\n", "Номер на заявката", "Две имена", "Имейл", "ЕГН", "Начална дата", "Крайна дата", "Тип-платена/неплатена", "Статус"));
 
             while (fileReader.hasNextLine()) {
                 String vacation = fileReader.nextLine();
                 String[] vacationDetails = vacation.split(",");
 
                 if (vacationDetails[1].equalsIgnoreCase(employeeName)) {
-                    System.out.printf("%-15s %-15s %-15s %-15s %-15s %-15s %-15s\n", vacationDetails[0], vacationDetails[1], vacationDetails[2], vacationDetails[3], vacationDetails[4], vacationDetails[5], vacationDetails[6], vacationDetails[7]);
+                    System.out.printf("%-15s %-15s %-15s %-15s %-15s %-15s %-15s %-15s\n", vacationDetails[0], vacationDetails[1], vacationDetails[2], vacationDetails[3], vacationDetails[4], vacationDetails[5], vacationDetails[6], vacationDetails[7]);
                 }
             }
             fileReader.close();
