@@ -5,8 +5,19 @@ import java.io.IOException;
 import java.util.Formatter;
 import java.util.Scanner;
 import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Main {
+    public static void printMenuInfo() {
+        System.out.println();
+        System.out.println("Добре дошли в системата за отпуски на фирма DigitalRazgrad 2023. Моля изберете опция от менюто, като въведете число от 1 до 5:");
+        System.out.println("------------------------------------------------------------------------------------------------------------------------------");
+        System.out.println(" 1. Заяви отпуска\n 2. Виж всички отпуски \n 3. Виж отпуска за служител \n 4. Промени статус на отпуска \n 5. Изход");
+        System.out.println("------------------------------------------------------------------------------------------------------------------------------");
+        System.out.println("Въведи избор:");
+    }
+
     public static String numberVacationGenerator() {
         Random random = new Random();
         String number = "";
@@ -18,6 +29,19 @@ public class Main {
         return number;
     }
 
+    public static boolean isValidEmailFormat(String email) {
+        String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
+        Pattern pattern = Pattern.compile(emailRegex);
+        Matcher matcher = pattern.matcher(email);
+
+        return matcher.matches();
+    }
+
+    public static boolean isValidIDNumber (String iDnumber){
+
+        return iDnumber.length() == 10;
+    }
+
     public static void generateVacation(Scanner sc) {
         try {
             String requestNumber = numberVacationGenerator();
@@ -27,8 +51,16 @@ public class Main {
             String name = sc.nextLine();
             System.out.println("Имейл:");
             String email = sc.nextLine();
+            if (!isValidEmailFormat(email)) {
+                System.out.println("Грешка: Невалиден мейл адрес.");
+                return;
+            }
             System.out.println("ЕГН:");
             String id = sc.nextLine();
+            if (!isValidIDNumber(id)){
+                System.out.println("Грешка: Невалидно ЕГН.");
+                return;
+            }
             System.out.println("Дата за начало на отпуската(ден.месец.година):");
             String dataVacationBeginning = sc.nextLine();
             System.out.println("Дата за край на отпуската(ден.месец.година):");
@@ -131,7 +163,6 @@ public class Main {
                     vacationDetails[7] = newStatus;
                     vacation = String.join(",", vacationDetails);
                 }
-
                 fileContent.append(vacation).append("\n");
             }
 
@@ -147,18 +178,12 @@ public class Main {
         }
     }
 
-
     public static void main(String[] args) {
         Scanner input = new Scanner(System.in);
         int menuNumber;
 
         do {
-            System.out.println();
-            System.out.println("Добре дошли в системата за отпуски на фирма DigitalRazgrad 2023. Моля изберете опция от менюто, като въведете число от 1 до 5:");
-            System.out.println("------------------------------------------------------------------------------------------------------------------------------");
-            System.out.println(" 1. Заяви отпуска\n 2. Виж всички отпуски \n 3. Виж отпуска за служител \n 4. Промени статус на отпуска \n 5. Изход");
-            System.out.println("------------------------------------------------------------------------------------------------------------------------------");
-            System.out.println("Въведи избор:");
+            printMenuInfo();
             menuNumber = input.nextInt();
             input.nextLine();
 
