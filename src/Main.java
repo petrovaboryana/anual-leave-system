@@ -55,6 +55,10 @@ public class Main {
         }
     }
 
+    public static boolean isValidVacationType(String vacationType) {
+        return vacationType.equalsIgnoreCase("платена") || vacationType.equalsIgnoreCase("неплатена");
+    }
+
     public static void generateVacation(Scanner sc) {
         try {
             String requestNumber = numberVacationGenerator();
@@ -84,6 +88,11 @@ public class Main {
             }
             System.out.println("Тип на отпуската (платена/неплатена): ");
             String vacationType = sc.nextLine();
+            if (!isValidVacationType(vacationType)) {
+                System.out.println("Грешка: Невалиден тип на отпуска.");
+                return;
+            }
+
             String status = "изчаква";
 
             writer.write(requestNumber + "," + name + "," + email + "," + id + "," + dataVacationBeginning + "," + dataVacationEnding + "," + vacationType + "," + status + "\n");
@@ -100,15 +109,18 @@ public class Main {
             File file = new File("vacationsDigitalRazgrad2023.csv");
             Scanner fileReader = new Scanner(file, "utf-8");
             System.out.println("Всички заявени отпуски във фирмата са:");
+            System.out.println("--------------------------------------------------------------------------------------------------------------------------------");
             Formatter formatter = new Formatter();
-            System.out.println(formatter.format("%-15s %-15s %-15s %-10s %-15s %-15s %-15s %-25s\n", "Номер на заявката", "Две имена", "Имейл", "ЕГН", "Начална дата", "Крайна дата", "Тип-платена/неплатена", " Статус"));
-            String line = " ";
+            System.out.print(formatter.format("%-10s %-10s %-15s %-13s %-15s %-15s %-15s %-25s\n", "|Номер на заявката|", "|Две имена|", "|Имейл|", "|ЕГН|", "|Начална дата|", "|Крайна дата|", "|Тип-платена/неплатена|", "|Статус|"));
+            System.out.println("--------------------------------------------------------------------------------------------------------------------------------");
+            String line = "";
             while (fileReader.hasNextLine()) {
                 line = fileReader.nextLine();
                 String[] employeeInfo = line.split(",");
                 System.out.printf("%-15s %-15s %-15s %-15s %-15s %-15s %-15s %-15s\n", employeeInfo[0], employeeInfo[1], employeeInfo[2], employeeInfo[3], employeeInfo[4], employeeInfo[5], employeeInfo[6], employeeInfo[7]);
             }
             fileReader.close();
+            System.out.println("--------------------------------------------------------------------------------------------------------------------------------");
         } catch (Exception e) {
             System.out.println("Грешка: " + e.getMessage());
             e.printStackTrace();
@@ -119,12 +131,15 @@ public class Main {
         try {
             System.out.print("Въведи име на служителя: ");
             String employeeName = sc.nextLine();
+
             File file = new File("vacationsDigitalRazgrad2023.csv");
             Scanner fileReader = new Scanner(file, "utf-8");
 
             System.out.println("Отпуски за служител с име " + employeeName + ":");
+            System.out.println("--------------------------------------------------------------------------------------------------------------------------------");
             Formatter formatter = new Formatter();
-            System.out.println(formatter.format("%-15s %-15s %-15s %-10s %-15s %-15s %-15s %-25s\n", "Номер на заявката", "Две имена", "Имейл", "ЕГН", "Начална дата", "Крайна дата", "Тип-платена/неплатена", "Статус"));
+            System.out.print(formatter.format("%-10s %-10s %-15s %-13s %-15s %-15s %-15s %-25s\n", "|Номер на заявката|", "|Две имена|", "|Имейл|", "|ЕГН|", "|Начална дата|", "|Крайна дата|", "|Тип-платена/неплатена|", "|Статус|"));
+            System.out.println("--------------------------------------------------------------------------------------------------------------------------------");
 
             while (fileReader.hasNextLine()) {
                 String vacation = fileReader.nextLine();
@@ -135,32 +150,14 @@ public class Main {
                 }
             }
             fileReader.close();
+            System.out.println("--------------------------------------------------------------------------------------------------------------------------------");
         } catch (IOException e) {
             System.out.println("Невалидни входни данни! Името е грешно или служителя няма заявена отпуска.");
         }
     }
 
-    public static void viewVacationStatus() {
-        try {
-            File file = new File("vacationsDigitalRazgrad2023.csv");
-            Scanner fileReader = new Scanner(file, "utf-8");
-            System.out.println("Всички заявени отпуски във фирмата са:");
-            Formatter formatter = new Formatter();
-            System.out.println(formatter.format("%-15s %-15s %-15s %-15s %-15s %-15s %-15s %-15s\n", "Номер на заявката", "Две имена", "Имейл", "ЕГН", "Начална дата", "Крайна дата", "Тип-платена/неплатена", "Статус"));
-
-            while (fileReader.hasNextLine()) {
-                String line = fileReader.nextLine();
-                String[] employeeInfo = line.split(",");
-                System.out.printf("%-15s %-15s %-15s %-15s %-15s %-15s %-15s %-15s\n", employeeInfo[0], employeeInfo[1], employeeInfo[2], employeeInfo[3], employeeInfo[4], employeeInfo[5], employeeInfo[6], employeeInfo[7]);
-            }
-            fileReader.close();
-        } catch (Exception e) {
-            System.out.println("Грешка!");
-        }
-    }
-
     public static void changeVacationStatus(Scanner sc) {
-        viewVacationStatus();
+        viewAllVacations();
         try {
             System.out.print("Въведи номер на заявката: ");
             String vacationNumber = sc.nextLine();
