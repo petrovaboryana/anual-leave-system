@@ -2,6 +2,8 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Formatter;
 import java.util.Scanner;
 import java.util.Random;
@@ -37,9 +39,20 @@ public class Main {
         return matcher.matches();
     }
 
-    public static boolean isValidIDNumber (String iDnumber){
+    public static boolean isValidIDNumber(String iDNumber) {
+        return iDNumber.length() == 10;
+    }
 
-        return iDnumber.length() == 10;
+    public static boolean isDateFormatValid(String date) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+        dateFormat.setLenient(false);
+
+        try {
+            dateFormat.parse(date);
+            return true;
+        } catch (ParseException e) {
+            return false;
+        }
     }
 
     public static void generateVacation(Scanner sc) {
@@ -57,7 +70,7 @@ public class Main {
             }
             System.out.println("ЕГН:");
             String id = sc.nextLine();
-            if (!isValidIDNumber(id)){
+            if (!isValidIDNumber(id)) {
                 System.out.println("Грешка: Невалидно ЕГН.");
                 return;
             }
@@ -65,6 +78,10 @@ public class Main {
             String dataVacationBeginning = sc.nextLine();
             System.out.println("Дата за край на отпуската(ден.месец.година):");
             String dataVacationEnding = sc.nextLine();
+            if (!isDateFormatValid(dataVacationBeginning) || !isDateFormatValid(dataVacationEnding)) {
+                System.out.println("Грешка: Невалиден формат на датата.");
+                return;
+            }
             System.out.println("Тип на отпуската (платена/неплатена): ");
             String vacationType = sc.nextLine();
             String status = "изчаква";
